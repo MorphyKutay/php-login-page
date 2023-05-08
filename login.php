@@ -6,11 +6,11 @@ include "baglan.php";
 
 // Formdan kullanıcı adı ve şifreyi al
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $kullanici_adi = $_POST['uname'];
-    $sifre = $_POST['password'];
+    $kullanici_adi = mysqli_real_escape_string($conn, $_POST['uname']);
+    $sifre = mysqli_real_escape_string($conn, $_POST['password']);
 
     // Veritabanından kullanıcıyı sorgula
-    $sql = "SELECT * FROM veri WHERE uname = '$kullanici_adi' AND pass = '$sifre'";
+    $sql = "SELECT * FROM veri WHERE username = '$kullanici_adi' AND password = '$sifre'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -18,12 +18,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["kullanici_adi"] = $kullanici_adi;
         $_SESSION["giris_zamani"] = time(); // Unix zaman damgası
         $_SESSION['adminlogin'] = true;
-       
+
         // Ana sayfaya yönlendir
         header("Location: home.php");
         exit();
     } else {
-        echo "hata";
+            header("Location: index.php?error");
+            exit();
     }
 }
-?>
